@@ -13,17 +13,17 @@ ARG PKG_ARCH=cortexa9hf-neon-poky-linux-gnueabi
 ARG API_DIR=/opt/axis/sdk/temp/sysroots/${PKG_ARCH}/usr
 ARG NATIVE_DIR=/axis/device-api
 
-# Whitelist of APIs in native SDK scope from Classic SKD
+# APIs included in Native SDK scope from Classic SDK
 COPY --from=api ${API_DIR}/include/larod.h ${NATIVE_DIR}/include/
-COPY --from=api   ${API_DIR}/include/licensekey* ${NATIVE_DIR}/include/
-COPY --from=api   ${API_DIR}/include/axoverlay.h  ${NATIVE_DIR}/include/
-COPY --from=api  ${API_DIR}/include/cairo  ${NATIVE_DIR}/include/cairo
-COPY --from=api  ${API_DIR}/include/vdo ${NATIVE_DIR}/include/vdo
+COPY --from=api ${API_DIR}/include/licensekey* ${NATIVE_DIR}/include/
+COPY --from=api ${API_DIR}/include/axoverlay.h ${NATIVE_DIR}/include/
+COPY --from=api ${API_DIR}/include/cairo ${NATIVE_DIR}/include/cairo
+COPY --from=api ${API_DIR}/include/vdo ${NATIVE_DIR}/include/vdo
 COPY --from=api ${API_DIR}/include/CL/opencl.h ${NATIVE_DIR}/include/CL/opencl.h
 COPY --from=api ${API_DIR}/include/axsdk/axevent.h ${NATIVE_DIR}/include/axsdk/axevent.h
 COPY --from=api ${API_DIR}/include/axsdk/axevent ${NATIVE_DIR}/include/axsdk/axevent
 
-# Whitelist direct dependencies from Classic SKD
+# Direct dependencies from Classic SDK
 COPY --from=api ${API_DIR}/lib/pkgconfig/liblarod.pc \
   ${API_DIR}/lib/pkgconfig/vdostream.pc \
   ${API_DIR}/lib/pkgconfig/axevent.pc \
@@ -31,7 +31,7 @@ COPY --from=api ${API_DIR}/lib/pkgconfig/liblarod.pc \
   ${API_DIR}/lib/pkgconfig/opencl.pc \
   ${API_DIR}/lib/pkgconfig/cairo.pc ${NATIVE_DIR}/lib/pkgconfig/
 
-COPY --from=api  ${API_DIR}/lib/liblarod* \
+COPY --from=api ${API_DIR}/lib/liblarod* \
   ${API_DIR}/lib/libvdostream* \
   ${API_DIR}/lib/libaxevent* \
   ${API_DIR}/lib/liblicensekey* \
@@ -39,15 +39,15 @@ COPY --from=api  ${API_DIR}/lib/liblarod* \
   ${API_DIR}/lib/libOpenCL* \
   ${API_DIR}/lib/libcairo* ${NATIVE_DIR}/lib/
 
-# Whitelist additional axis dependencies from Classic SKD
-COPY --from=api  ${API_DIR}/lib/libevent2* \
-  ${API_DIR}/lib/libaxpackage*  \
+# AXIS specific dependencies from Classic SDK
+COPY --from=api ${API_DIR}/lib/libevent2* \
+  ${API_DIR}/lib/libaxpackage* \
   ${API_DIR}/lib/libpolicykit_system* \
   ${API_DIR}/lib/libfido* ${NATIVE_DIR}/lib/
 
-# Whitelist additional standard linux dependencies from Classic SKD
+# Standard Linux dependencies from Classic SDK
 COPY --from=api ${API_DIR}/include/glib-2.0 ${NATIVE_DIR}/include/glib-2.0
-COPY --from=api  ${API_DIR}/lib/glib-2.0 ${NATIVE_DIR}/lib/glib-2.0
+COPY --from=api ${API_DIR}/lib/glib-2.0 ${NATIVE_DIR}/lib/glib-2.0
 
 COPY --from=api ${API_DIR}/lib/pkgconfig/glib-2.0.pc \
   ${API_DIR}/lib/pkgconfig/libpcre* \
@@ -65,11 +65,11 @@ COPY --from=api ${API_DIR}/lib/pkgconfig/glib-2.0.pc \
   ${API_DIR}/lib/pkgconfig/uuid.pc \
   ${API_DIR}/lib/pkgconfig/expat.pc ${NATIVE_DIR}/lib/pkgconfig/
 
-COPY --from=api  ${API_DIR}/lib/libglib-2.0* \
+COPY --from=api ${API_DIR}/lib/libglib-2.0* \
   ${API_DIR}/lib/libpcre* \
-  ${API_DIR}/lib/libpthread*  \
+  ${API_DIR}/lib/libpthread* \
   ${API_DIR}/lib/libgobject* \
-  ${API_DIR}/lib/libxmlnode*   \
+  ${API_DIR}/lib/libxmlnode* \
   ${API_DIR}/lib/libglib-utils* \
   ${API_DIR}/lib/libsystemd* \
   ${API_DIR}/lib/libgio-2.0* \
@@ -81,7 +81,7 @@ COPY --from=api  ${API_DIR}/lib/libglib-2.0* \
   ${API_DIR}/lib/libgmodule-2.0* \
   ${API_DIR}/lib/libz* \
   ${API_DIR}/lib/libresolv* \
-  ${API_DIR}/lib/libdl*  \
+  ${API_DIR}/lib/libdl* \
   ${API_DIR}/lib/libcrypto* \
   ${API_DIR}/lib/libpixman-1* \
   ${API_DIR}/lib/libfontconfig* \
@@ -93,7 +93,7 @@ COPY --from=api  ${API_DIR}/lib/libglib-2.0* \
   ${API_DIR}/lib/libGLESv2* \
   ${API_DIR}/lib/libEGL* \
   ${API_DIR}/lib/libGAL* \
-  ${API_DIR}/lib/libVSC*  ${NATIVE_DIR}/lib/
+  ${API_DIR}/lib/libVSC* ${NATIVE_DIR}/lib/
 
 FROM ubuntu:${UBUNTU_VERSION}
 
