@@ -4,12 +4,12 @@ ARG VERSION=3.2
 ARG TOOLCHAINS_UBUNTU_VERSION=19.10
 ARG UBUNTU_VERSION=20.04
 ARG REPO=axisecp
+ARG PKG_ARCH=cortexa9hf-neon-poky-linux-gnueabi
 
 FROM ${REPO}/acap-api:${VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as api
 FROM ${REPO}/acap-toolchain:${VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as toolchain
 FROM ubuntu:${UBUNTU_VERSION} as native-api
-
-ARG PKG_ARCH=cortexa9hf-neon-poky-linux-gnueabi
+ARG PKG_ARCH
 ARG API_DIR=/opt/axis/sdk/temp/sysroots/${PKG_ARCH}/usr
 ARG NATIVE_DIR=/axis/device-api
 
@@ -17,9 +17,10 @@ ARG NATIVE_DIR=/axis/device-api
 COPY --from=api ${API_DIR}/include/larod.h ${NATIVE_DIR}/include/
 COPY --from=api ${API_DIR}/include/licensekey* ${NATIVE_DIR}/include/
 COPY --from=api ${API_DIR}/include/axoverlay.h ${NATIVE_DIR}/include/
+# temp removing opencl since it doesn't exist in aarch64
+# COPY --from=api ${API_DIR}/include/CL/opencl? ${NATIVE_DIR}/include/
 COPY --from=api ${API_DIR}/include/cairo ${NATIVE_DIR}/include/cairo
 COPY --from=api ${API_DIR}/include/vdo ${NATIVE_DIR}/include/vdo
-COPY --from=api ${API_DIR}/include/CL/opencl.h ${NATIVE_DIR}/include/CL/opencl.h
 COPY --from=api ${API_DIR}/include/axsdk/axevent.h ${NATIVE_DIR}/include/axsdk/axevent.h
 COPY --from=api ${API_DIR}/include/axsdk/axevent ${NATIVE_DIR}/include/axsdk/axevent
 
@@ -28,7 +29,7 @@ COPY --from=api ${API_DIR}/lib/pkgconfig/liblarod.pc \
   ${API_DIR}/lib/pkgconfig/vdostream.pc \
   ${API_DIR}/lib/pkgconfig/axevent.pc \
   ${API_DIR}/lib/pkgconfig/axoverlay.pc\
-  ${API_DIR}/lib/pkgconfig/opencl.pc \
+  ${API_DIR}/lib/pkgconfig/opencl.pc* \
   ${API_DIR}/lib/pkgconfig/cairo.pc ${NATIVE_DIR}/lib/pkgconfig/
 
 COPY --from=api ${API_DIR}/lib/liblarod* \
@@ -96,13 +97,14 @@ COPY --from=api ${API_DIR}/lib/libglib-2.0* \
   ${API_DIR}/lib/libVSC* ${NATIVE_DIR}/lib/
 
 FROM ubuntu:${UBUNTU_VERSION}
-
+ARG PKG_ARCH
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install packages needed for interactive users and some additional libraries
 # - curl, iputils-ping: required by eap-install.sh
 RUN apt-get update && apt-get install -y --no-install-recommends \
   crossbuild-essential-armhf \
+  crossbuild-essential-arm64 \
   make \
   pkg-config \
   python3-pip \
@@ -123,9 +125,6 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 
 # Update paths in environment-setup script
 RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
-
-# Hardcoded string for SDK architecture
-ARG PKG_ARCH=cortexa9hf-neon-poky-linux-gnueabi
 
 # Copy the lib, include, .pc from API container
 COPY --from=native-api /axis/device-api/ /opt/axis/acapsdk/sysroots/${PKG_ARCH}/usr/
