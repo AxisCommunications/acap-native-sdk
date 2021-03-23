@@ -1,24 +1,47 @@
 # Repository and tag variables
 ARG ARCH=armv7hf
-ARG VERSION=3.2
-ARG TOOLCHAINS_UBUNTU_VERSION=19.10
+ARG VERSION=3.3_beta1
 ARG UBUNTU_VERSION=20.04
 ARG REPO=axisecp
-ARG PKG_ARCH=cortexa9hf-neon-poky-linux-gnueabi
 
-FROM ${REPO}/acap-api:${VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as api
-FROM ${REPO}/acap-toolchain:${VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as toolchain
-FROM ubuntu:${UBUNTU_VERSION} as native-api
-ARG PKG_ARCH
-ARG API_DIR=/opt/axis/sdk/temp/sysroots/${PKG_ARCH}/usr
-ARG NATIVE_DIR=/axis/device-api
+FROM ${REPO}/acap-api:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as api
+FROM ${REPO}/acap-toolchain:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as toolchain
+FROM ubuntu:${UBUNTU_VERSION}
+ARG ARCH
+ARG API_DIR=/opt/axis/sdk/temp/sysroots/${ARCH}/usr
+ARG NATIVE_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install packages needed for interactive users and some additional libraries
+# - curl, iputils-ping: required by eap-install.sh
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  crossbuild-essential-armhf \
+  make \
+  pkg-config \
+  python3-pip \
+  python3-jsonschema \
+  curl \
+  iputils-ping \
+  xz-utils \
+  git \
+  less \
+  vim
+
+# Copy and install the tools and scripts from toolchain container
+COPY --from=toolchain /opt/axis/sdk/temp /opt/axis/acapsdk
+COPY --from=toolchain /opt/axis/tools /opt/axis/tools
+RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
+  pip3 install /opt/axis/tools/Larodconverter*.whl && \
+  rm -rf /opt/axis/tools
+
+# Update paths in environment-setup script
+RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
 
 # APIs included in Native SDK scope from Classic SDK
 COPY --from=api ${API_DIR}/include/larod.h ${NATIVE_DIR}/include/
 COPY --from=api ${API_DIR}/include/licensekey* ${NATIVE_DIR}/include/
 COPY --from=api ${API_DIR}/include/axoverlay.h ${NATIVE_DIR}/include/
-# temp removing opencl since it doesn't exist in aarch64
-# COPY --from=api ${API_DIR}/include/CL/opencl? ${NATIVE_DIR}/include/
+COPY --from=api ${API_DIR}/include/CL ${NATIVE_DIR}/include/CL
 COPY --from=api ${API_DIR}/include/cairo ${NATIVE_DIR}/include/cairo
 COPY --from=api ${API_DIR}/include/vdo ${NATIVE_DIR}/include/vdo
 COPY --from=api ${API_DIR}/include/axsdk/axevent.h ${NATIVE_DIR}/include/axsdk/axevent.h
@@ -95,39 +118,6 @@ COPY --from=api ${API_DIR}/lib/libglib-2.0* \
   ${API_DIR}/lib/libEGL* \
   ${API_DIR}/lib/libGAL* \
   ${API_DIR}/lib/libVSC* ${NATIVE_DIR}/lib/
-
-FROM ubuntu:${UBUNTU_VERSION}
-ARG PKG_ARCH
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install packages needed for interactive users and some additional libraries
-# - curl, iputils-ping: required by eap-install.sh
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  crossbuild-essential-armhf \
-  crossbuild-essential-arm64 \
-  make \
-  pkg-config \
-  python3-pip \
-  python3-jsonschema \
-  curl \
-  iputils-ping \
-  xz-utils \
-  git \
-  less \
-  vim
-
-# Copy and install the tools and scripts from toolchain container
-COPY --from=toolchain /opt/axis/sdk/temp /opt/axis/acapsdk
-COPY --from=toolchain /opt/axis/tools /opt/axis/tools
-RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
-  pip3 install /opt/axis/tools/Larodconverter*.whl && \
-  rm -rf /opt/axis/tools
-
-# Update paths in environment-setup script
-RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
-
-# Copy the lib, include, .pc from API container
-COPY --from=native-api /axis/device-api/ /opt/axis/acapsdk/sysroots/${PKG_ARCH}/usr/
 
 # Make the environment sourced for interactive Bash users
 RUN printf "\n# Source SDK for all users\n. /opt/axis/acapsdk/environment-*\n" >> /etc/bash.bashrc
