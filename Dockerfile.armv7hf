@@ -38,9 +38,9 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
 
 # APIs included in Native SDK scope from Classic SDK
-COPY --from=api ${API_DIR}/include/larod.h ${NATIVE_DIR}/include/
+COPY --from=api ${API_DIR}/include/larod* ${NATIVE_DIR}/include/
 COPY --from=api ${API_DIR}/include/licensekey* ${NATIVE_DIR}/include/
-COPY --from=api ${API_DIR}/include/axoverlay.h ${NATIVE_DIR}/include/
+COPY --from=api ${API_DIR}/include/axoverlay* ${NATIVE_DIR}/include/
 COPY --from=api ${API_DIR}/include/CL ${NATIVE_DIR}/include/CL
 COPY --from=api ${API_DIR}/include/cairo ${NATIVE_DIR}/include/cairo
 COPY --from=api ${API_DIR}/include/vdo ${NATIVE_DIR}/include/vdo
@@ -106,6 +106,7 @@ COPY --from=api ${API_DIR}/lib/libglib-2.0* \
   ${API_DIR}/lib/libz* \
   ${API_DIR}/lib/libresolv* \
   ${API_DIR}/lib/libdl* \
+  ${API_DIR}/lib/libm* \
   ${API_DIR}/lib/libcrypto* \
   ${API_DIR}/lib/libpixman-1* \
   ${API_DIR}/lib/libfontconfig* \
