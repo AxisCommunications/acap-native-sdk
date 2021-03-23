@@ -15,7 +15,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install packages needed for interactive users and some additional libraries
 # - curl, iputils-ping: required by eap-install.sh
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  crossbuild-essential-armhf \
   crossbuild-essential-arm64 \
   make \
   pkg-config \
