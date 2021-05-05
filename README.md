@@ -20,9 +20,9 @@ The following APIs are supported:
 
 # Examples
 ## Classic ACAP application
-Building a classic acap example with ACAP Native SDK:
+Building a classic ACAP example with ACAP Native SDK:
 ```bash
-docker build . --tag native_example_appliction --build-arg VERSION=1.0_alpha1 --build-arg SDK=acap-native-sdk
+docker build . --tag native_example_application --build-arg VERSION=1.0_alpha1 --build-arg SDK=acap-native-sdk
 ```
 
 Classic application examples supported by ACAP Native SDK:
