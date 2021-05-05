@@ -9,7 +9,7 @@ The table below shows API and firmware version compatibility.
 | 1.0-alpha1      | 10.5         | Initial version forked from acap3-sdk |
 
 # APIs
-API's included in Alpha 1.0:
+The following APIs are supported:
   * Larod
   * Vdo
   * OpenCL
