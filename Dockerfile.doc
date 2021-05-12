@@ -1,0 +1,23 @@
+# Repository and tag variables
+ARG ARCH=armv7hf
+ARG VERSION=latest
+ARG UBUNTU_VERSION=20.04
+ARG REPO=axisecp
+
+FROM ${REPO}/acap-native-sdk:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION}
+
+ENV http_proxy=http://wwwproxy.se.axis.com:3128
+ENV https_proxy=http://wwwproxy.se.axis.com:3128
+ENV AXIS_TOP_DIR=/opt/builder-doc
+ENV API_DOC=$AXIS_TOP_DIR/result
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    doxygen \
+    graphviz
+
+COPY ./Doxygen.conf /opt/doc/
+# Set workdir
+WORKDIR /opt/doc
+
+#generate api doc
+RUN doxygen /opt/doc/Doxygen.conf
