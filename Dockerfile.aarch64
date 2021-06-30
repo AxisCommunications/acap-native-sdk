@@ -12,10 +12,15 @@ ARG API_DIR=/opt/axis/sdk/temp/sysroots/${ARCH}/usr
 ARG NATIVE_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install from 20.10(groovy) to make cross compiler use gcc-10
+RUN sed -i 's/focal/groovy/g' /etc/apt/sources.list && apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+	  crossbuild-essential-arm64 && \
+  sed -i 's/groovy/focal/g' /etc/apt/sources.list && apt-get update
+
 # Install packages needed for interactive users and some additional libraries
 # - curl, iputils-ping: required by eap-install.sh
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  crossbuild-essential-arm64 \
   make \
   pkg-config \
   python3-pip \
@@ -37,8 +42,7 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tools/manifest-generator:#g' /opt/axis/acapsdk/environment-setup*
 
 # Update paths and add explicit sdk path to linker in environment-setup script
-RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup* && \
-  sed -i '/\(CC\|CPP\|CXX\)=/s:"$: -L $SDKTARGETSYSROOT/usr/lib":g' /opt/axis/acapsdk/environment-setup*
+RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
 
 # APIs included in Native SDK scope from Classic SDK
 COPY --from=api ${API_DIR}/include/larod* ${NATIVE_DIR}/include/
