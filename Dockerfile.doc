@@ -8,8 +8,6 @@ FROM ${REPO}/acap-native-sdk:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION}
 
 ENV http_proxy=http://wwwproxy.se.axis.com:3128
 ENV https_proxy=http://wwwproxy.se.axis.com:3128
-ENV AXIS_TOP_DIR=/opt/builder-doc
-ENV API_DOC=$AXIS_TOP_DIR/result
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     doxygen \
