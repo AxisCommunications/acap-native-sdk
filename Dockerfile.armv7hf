@@ -1,6 +1,6 @@
 # Repository and tag variables
 ARG ARCH=armv7hf
-ARG VERSION=3.3_beta1
+ARG VERSION=3.4
 ARG UBUNTU_VERSION=20.04
 ARG REPO=axisecp
 
@@ -12,10 +12,15 @@ ARG API_DIR=/opt/axis/sdk/temp/sysroots/${ARCH}/usr
 ARG NATIVE_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install from 20.10(groovy) to make cross compiler use gcc-10
+RUN sed -i 's/focal/groovy/g' /etc/apt/sources.list && apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+	  crossbuild-essential-armhf && \
+  sed -i 's/groovy/focal/g' /etc/apt/sources.list && apt-get update
+
 # Install packages needed for interactive users and some additional libraries
 # - curl, iputils-ping: required by eap-install.sh
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  crossbuild-essential-armhf \
   make \
   pkg-config \
   python3-pip \
@@ -31,8 +36,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=toolchain /opt/axis/sdk/temp /opt/axis/acapsdk
 COPY --from=toolchain /opt/axis/tools /opt/axis/tools
 RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
-  pip3 install /opt/axis/tools/Larodconverter*.whl && \
   rm -rf /opt/axis/tools
+
+# Add axis-acap-manifest-tools to PATH
+RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tools/manifest-generator:#g' /opt/axis/acapsdk/environment-setup*
 
 # Update paths in environment-setup script
 RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
