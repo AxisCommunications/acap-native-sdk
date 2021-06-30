@@ -31,7 +31,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=toolchain /opt/axis/sdk/temp /opt/axis/acapsdk
 COPY --from=toolchain /opt/axis/tools /opt/axis/tools
 RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
-  pip3 install /opt/axis/tools/Larodconverter*.whl && \
   rm -rf /opt/axis/tools
 
 # Update paths in environment-setup script
