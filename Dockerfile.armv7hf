@@ -41,7 +41,7 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 # Add axis-acap-manifest-tools to PATH
 RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tools/manifest-generator:#g' /opt/axis/acapsdk/environment-setup*
 
-# Update paths and add explicit sdk path to linker in environment-setup script
+# Update paths in environment-setup script
 RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
 
 # APIs included in Native SDK scope from Classic SDK
