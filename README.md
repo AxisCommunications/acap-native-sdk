@@ -6,8 +6,8 @@ The table below shows API and firmware version compatibility.
 
 | API Version | Firmware | Comment|
 | ---------------- | ------------- |------------- |
-| 1.0-alpha1      | 10.5         | Initial version forked from acap3-sdk |
-| latest       | 10.6         | Updated APIs and toolchain from legacy SDK 3.4|
+| 1.0-alpha1       | 10.5         | Initial version forked from acap3-sdk |
+| latest           | 10.6         | Updated API and Toolchain version to 3.4.|
 
 # APIs
 The following APIs are supported:
@@ -19,15 +19,20 @@ The following APIs are supported:
   * OpenCL
   * Vdo
 
-# Languages
-* C
-* C++
+# C++ Support
+## C++ Standard Library
+ACAP native SDK uses [GNU C++ Standard Library (libstdc++)](https://gcc.gnu.org/onlinedocs/libstdc++/).
+
+## C++ Version
+We recommend C++ ACAP application to use either C++11 or C++17.
+For more details about C++ support, see [C++ Standards Support in GCC](https://gcc.gnu.org/projects/cxx-status.html) and
+[libstdc++ Implementation Status](https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html).
 
 # Examples
 ## Classic ACAP application
 Building a classic ACAP example with ACAP Native SDK:
 ```bash
-docker build . --tag native_example_application --build-arg VERSION=1.0_alpha1 --build-arg SDK=acap-native-sdk
+docker build . --tag native_example_application --build-arg VERSION=latest --build-arg SDK=acap-native-sdk
 ```
 
 Classic application examples supported by ACAP Native SDK:
@@ -36,6 +41,7 @@ Classic application examples supported by ACAP Native SDK:
 * [larod](https://github.com/AxisCommunications/acap3-examples/tree/master/larod/)
 * [licensekey](https://github.com/AxisCommunications/acap3-examples/tree/master/licensekey/)
 * [object-detection](https://github.com/AxisCommunications/acap3-examples/blob/master/object-detection)
+* [reproducible-package](https://github.com/AxisCommunications/acap3-examples/blob/master/reproducible-package)
 * [tensorflow-to-larod](https://github.com/AxisCommunications/acap3-examples/tree/master/tensorflow-to-larod/)
 * [using-opencv](https://github.com/AxisCommunications/acap3-examples/tree/master/using-opencv/)
 * [vdostream](https://github.com/AxisCommunications/acap3-examples/tree/master/vdostream/)
