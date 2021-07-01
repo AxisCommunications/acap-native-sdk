@@ -21,10 +21,11 @@ The following APIs are supported:
 
 # C++ Support
 ## C++ Standard Library
-ACAP native SDK uses [GNU C++ Standard Library (libstdc++)](https://gcc.gnu.org/onlinedocs/libstdc++/).
+ACAP Native SDK uses [GNU C++ Standard Library (libstdc++)](https://gcc.gnu.org/onlinedocs/libstdc++/).
 
 ## C++ Version
-We recommend C++ ACAP application to use either C++11 or C++17.
+We recommend ACAP application written in C++ to use either C++ version 11 or C++ version 17.
+
 For more details about C++ support, see [C++ Standards Support in GCC](https://gcc.gnu.org/projects/cxx-status.html) and
 [libstdc++ Implementation Status](https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html).
 
