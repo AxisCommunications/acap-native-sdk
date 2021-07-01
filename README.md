@@ -6,23 +6,34 @@ The table below shows API and firmware version compatibility.
 
 | API Version | Firmware | Comment|
 | ---------------- | ------------- |------------- |
-| 1.0-alpha1      | 10.5         | Initial version forked from acap3-sdk |
+| 1.0-alpha1       | 10.5         | Initial version forked from acap3-sdk |
+| latest           | 10.6         | Updated API and Toolchain version to 3.4.|
 
 # APIs
 The following APIs are supported:
-  * Larod
-  * Vdo
-  * OpenCL
-  * Licensekey
   * AxEvent
   * AxOverlay
   * Cairo
+  * Larod
+  * Licensekey
+  * OpenCL
+  * Vdo
+
+# C++ Support
+## C++ Standard Library
+ACAP Native SDK uses [GNU C++ Standard Library (libstdc++)](https://gcc.gnu.org/onlinedocs/libstdc++/).
+
+## C++ Version
+We recommend ACAP application written in C++ to use either C++ version 11 or C++ version 17.
+
+For more details about C++ support, see [C++ Standards Support in GCC](https://gcc.gnu.org/projects/cxx-status.html) and
+[libstdc++ Implementation Status](https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html).
 
 # Examples
 ## Classic ACAP application
 Building a classic ACAP example with ACAP Native SDK:
 ```bash
-docker build . --tag native_example_application --build-arg VERSION=1.0_alpha1 --build-arg SDK=acap-native-sdk
+docker build . --tag native_example_application --build-arg VERSION=latest --build-arg SDK=acap-native-sdk
 ```
 
 Classic application examples supported by ACAP Native SDK:
@@ -30,10 +41,15 @@ Classic application examples supported by ACAP Native SDK:
 * [axoverlay](https://github.com/AxisCommunications/acap3-examples/tree/master/axoverlay/)
 * [larod](https://github.com/AxisCommunications/acap3-examples/tree/master/larod/)
 * [licensekey](https://github.com/AxisCommunications/acap3-examples/tree/master/licensekey/)
+* [object-detection](https://github.com/AxisCommunications/acap3-examples/blob/master/object-detection)
+* [reproducible-package](https://github.com/AxisCommunications/acap3-examples/blob/master/reproducible-package)
 * [tensorflow-to-larod](https://github.com/AxisCommunications/acap3-examples/tree/master/tensorflow-to-larod/)
 * [using-opencv](https://github.com/AxisCommunications/acap3-examples/tree/master/using-opencv/)
 * [vdostream](https://github.com/AxisCommunications/acap3-examples/tree/master/vdostream/)
 * [vdo-larod](https://github.com/AxisCommunications/acap3-examples/tree/master/vdo-larod/)
+* [vdo-larod-preprocessing](https://github.com/AxisCommunications/acap3-examples/tree/master/vdo-larod-preprocessing/)
+* [vdo-opencl-filtering](https://github.com/AxisCommunications/acap3-examples/blob/master/vdo-opencl-filtering/)
+
 ## Container based application
 Container based application examples supported by ACAP Native SDK:
 * [opencl-fft](https://github.com/AxisCommunications/acap-application-examples/tree/master/opencl-fft/)
