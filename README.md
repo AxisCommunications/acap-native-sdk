@@ -7,7 +7,7 @@ The table below shows API and firmware version compatibility.
 | API Version | Firmware | Comment|
 | ---------------- | ------------- |------------- |
 | 1.0-alpha1       | 10.5         | Initial version forked from acap3-sdk |
-| latest           | 10.6         | Updated API and Toolchain version to 3.4.|
+| 1.0-beta1        | 10.6         | Updated API to 3.4 and Toolchain to 3.4.1_beta1|
 
 # APIs
 The following APIs are supported:
@@ -33,7 +33,7 @@ For more details about C++ support, see [C++ Standards Support in GCC](https://g
 ## Classic ACAP application
 Building a classic ACAP example with ACAP Native SDK:
 ```bash
-docker build . --tag native_example_application --build-arg VERSION=latest --build-arg SDK=acap-native-sdk
+docker build . --tag native_example_application --build-arg VERSION=1.0-beta1 --build-arg SDK=acap-native-sdk
 ```
 
 Classic application examples supported by ACAP Native SDK:
