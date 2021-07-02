@@ -1,11 +1,12 @@
 # Repository and tag variables
 ARG ARCH=armv7hf
 ARG VERSION=3.4
+ARG TOOLCHAIN_VERSION=3.4.1_beta1
 ARG UBUNTU_VERSION=20.04
 ARG REPO=axisecp
 
 FROM ${REPO}/acap-api:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as api
-FROM ${REPO}/acap-toolchain:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as toolchain
+FROM ${REPO}/acap-toolchain:${TOOLCHAIN_VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as toolchain
 FROM ubuntu:${UBUNTU_VERSION}
 ARG ARCH
 ARG API_DIR=/opt/axis/sdk/temp/sysroots/${ARCH}/usr
