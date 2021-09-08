@@ -64,7 +64,7 @@ RUN rm -rf \
   legacyconfig \
   modules \
   opkg \
-  python3.8 \
+  python3* \
   rcscripts \
   ssl-* \
   service_registry \
@@ -76,6 +76,7 @@ RUN rm -f \
   arm-poky-linux-gnueabihf \
   apr* \
   libapac* \
+  libapr* \
   libax_daemon* \
   libaxaudio* \
   libaxhttp* \
