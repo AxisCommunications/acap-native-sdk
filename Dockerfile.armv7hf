@@ -145,7 +145,7 @@ RUN rm -rf \
   service_registry.pc \
   video-service \
   video-object-detection-subscriber.pc \
-  video-scene-subscriber.pc \
+  video-scene-subscriber.pc
 
 # Remove legacy API's directories and files in SDKPATH/usr/include
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/include
@@ -163,7 +163,7 @@ RUN rm -rf \
   axsdk/axstorage* \
   bbox.h \
   capture* \
-  dbus-*
+  dbus-* \
   fcgi* \
   gmock \
   google \
