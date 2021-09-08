@@ -87,7 +87,6 @@ RUN rm -f \
   libaxstorage* \
   libbbox* \
   libboost_* \
-  libbootblock* \
   libcapture* \
   libfcgi* \
   libicu* \
@@ -109,7 +108,6 @@ RUN rm -f \
   libsmartcols* \
   libsqlite3* \
   libss* \
-  libstdc++* \
   libti* \
   libturbojpeg* \
   libubsan* \
