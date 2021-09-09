@@ -8,20 +8,11 @@ ARG REPO=axisecp
 FROM ${REPO}/acap-api:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as api
 FROM ${REPO}/acap-toolchain:${TOOLCHAIN_VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as toolchain
 FROM ubuntu:${UBUNTU_VERSION}
-ARG ARCH
-ARG API_DIR=/opt/axis/sdk/temp/sysroots/${ARCH}/usr
-ARG NATIVE_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install from 20.10(groovy) to make cross compiler use gcc-10
-RUN sed -i 's/focal/groovy/g' /etc/apt/sources.list && apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-	  crossbuild-essential-arm64 && \
-  sed -i 's/groovy/focal/g' /etc/apt/sources.list && apt-get update
 
 # Install packages needed for interactive users and some additional libraries
 # - curl, iputils-ping: required by eap-install.sh
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  crossbuild-essential-arm64 \
   make \
   pkg-config \
   python3-pip \
@@ -33,6 +24,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   less \
   vim
 
+# Add symlink for python
+RUN cd /usr/bin && ln -s python3 python
+
 # Copy and install the tools and scripts from toolchain container
 COPY --from=toolchain /opt/axis/sdk/temp /opt/axis/acapsdk
 COPY --from=toolchain /opt/axis/tools /opt/axis/tools
@@ -42,78 +36,147 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 # Add axis-acap-manifest-tools to PATH
 RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tools/manifest-generator:#g' /opt/axis/acapsdk/environment-setup*
 
-# Update paths in environment-setup script
-RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup*
+# Update paths and add explicit sdk path to linker in environment-setup script
+RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup* && \
+  sed -i '/\(CC\|CPP\|CXX\)=/s:"$: -L$SDKTARGETSYSROOT/usr/lib":g' /opt/axis/acapsdk/environment-setup*
 
-# APIs included in Native SDK scope from Classic SDK
-COPY --from=api ${API_DIR}/include/larod* ${NATIVE_DIR}/include/
-COPY --from=api ${API_DIR}/include/licensekey* ${NATIVE_DIR}/include/
-COPY --from=api ${API_DIR}/include/vdo ${NATIVE_DIR}/include/vdo
-COPY --from=api ${API_DIR}/include/axsdk/axevent.h ${NATIVE_DIR}/include/axsdk/axevent.h
-COPY --from=api ${API_DIR}/include/axsdk/axevent ${NATIVE_DIR}/include/axsdk/axevent
+# Copy the lib, include and .pc files from the API container
+ARG ARCH=aarch64
+COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
+COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
 
-# Direct dependencies from Classic SDK
-COPY --from=api ${API_DIR}/lib/pkgconfig/liblarod.pc \
-  ${API_DIR}/lib/pkgconfig/vdostream.pc \
-  ${API_DIR}/lib/pkgconfig/axevent.pc ${NATIVE_DIR}/lib/pkgconfig/
+# Add a missing file for OpenGL
+ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
+RUN curl --create-dirs -o ${KHR_DIR}/khrplatform.h https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h
 
-COPY --from=api ${API_DIR}/lib/liblarod* \
-  ${API_DIR}/lib/libvdostream* \
-  ${API_DIR}/lib/libaxevent* \
-  ${API_DIR}/lib/liblicensekey*  ${NATIVE_DIR}/lib/
+# Remove legacy directories in SDKPATH/usr/lib
+WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib
+RUN rm -rf \
+  *.d \
+  apr-util* \
+  *-poky-linux* \
+  conf-migrate \
+  dbus-* \
+  gdk-pixbuf-* \
+  icu \
+  legacyconfig \
+  modules \
+  opkg \
+  python3* \
+  rcscripts \
+  ssl-* \
+  service_registry \
+  systemd \
+  udev
 
-# AXIS specific dependencies from Classic SDK
-COPY --from=api ${API_DIR}/lib/libevent2* \
-  ${API_DIR}/lib/libaxpackage* \
-  ${API_DIR}/lib/libpolicykit_system* \
-  ${API_DIR}/lib/libfido* ${NATIVE_DIR}/lib/
+# Remove legacy files and symlinks in SDKPATH/usr/lib
+RUN rm -f \
+  *-poky-linux* \
+  apr* \
+  libapac* \
+  libapr* \
+  libax_daemon* \
+  libaxaudio* \
+  libaxhttp* \
+  libaxlog* \
+  libaxparameter* \
+  libaxptz* \
+  libaxserialport* \
+  libaxstorage* \
+  libbbox* \
+  libboost_* \
+  libcapture* \
+  libfcgi* \
+  libicu* \
+  libjpeg* \
+  liblzma* \
+  libmenu* \
+  libmount* \
+  libnet_http* \
+  libpango* \
+  libparam* \
+  libprotobuf* \
+  libprotoc* \
+  libptzaurus* \
+  libptzmath* \
+  libpython* \
+  libscene* \
+  libsdbusplus* \
+  libservice_registry* \
+  libsmartcols* \
+  libsqlite* \
+  libss* \
+  libti* \
+  libturbojpeg* \
+  libubsan* \
+  libudev* \
+  libvideo_scene_subscriber* \
+  libvideo-object-detection-subscriber* \
+  libyuv* \
+  os-release
 
-# Standard Linux dependencies from Classic SDK
-COPY --from=api ${API_DIR}/include/glib-2.0 ${NATIVE_DIR}/include/glib-2.0
-COPY --from=api ${API_DIR}/lib/glib-2.0 ${NATIVE_DIR}/lib/glib-2.0
+# Remove legacy files and symlinks in SDKPATH/usr/lib/pkgconfig
+WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/pkgconfig
+RUN rm -rf \
+  apr* \
+  axaudio.pc \
+  axhttp.pc \
+  axlog.pc \
+  axparameter.pc \
+  axptz.pc \
+  axserialport.pc \
+  axstorage.pc \
+  bbox.pc \
+  dbus-* \
+  fcgi* \
+  gdk-pixbuf-* \
+  icu* \
+  libprotobuf-c.pc \
+  libscene.pc \
+  libssl.pc \
+  openssl.pc \
+  pango* \
+  protobuf* \
+  python* \
+  sdbusplus.pc \
+  service_registry.pc \
+  video-service \
+  video-object-detection-subscriber.pc \
+  video-scene-subscriber.pc
 
-COPY --from=api ${API_DIR}/lib/pkgconfig/glib-2.0.pc \
-  ${API_DIR}/lib/pkgconfig/libpcre* \
-  ${API_DIR}/lib/pkgconfig/gio-2.0.pc \
-  ${API_DIR}/lib/pkgconfig/gobject-2.0.pc \
-  ${API_DIR}/lib/pkgconfig/gio-unix-2.0.pc \
-  ${API_DIR}/lib/pkgconfig/libffi.pc \
-  ${API_DIR}/lib/pkgconfig/gmodule-no-export-2.0.pc \
-  ${API_DIR}/lib/pkgconfig/zlib.pc \
-  ${API_DIR}/lib/pkgconfig/libsystemd* \
-  ${API_DIR}/lib/pkgconfig/pixman-1.pc \
-  ${API_DIR}/lib/pkgconfig/fontconfig.pc \
-  ${API_DIR}/lib/pkgconfig/freetype2.pc \
-  ${API_DIR}/lib/pkgconfig/libpng.pc \
-  ${API_DIR}/lib/pkgconfig/uuid.pc \
-  ${API_DIR}/lib/pkgconfig/expat.pc ${NATIVE_DIR}/lib/pkgconfig/
+# Remove legacy directories and files in SDKPATH/usr/include
+WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/include
+RUN rm -rf \
+  apr* \
+  ax_daemon.h \
+  axis \
+  axlog* \
+  axsdk/axaudio* \
+  axsdk/ax_parameter* \
+  axsdk/axparameter* \
+  axsdk/axhttp* \
+  axsdk/axptz* \
+  axsdk/axserialport* \
+  axsdk/axstorage* \
+  bbox.h \
+  capture* \
+  dbus-* \
+  fcgi* \
+  gmock \
+  google \
+  gtest \
+  libyuv* \
+  openssl \
+  pango-* \
+  protobuf-c \
+  ptz* \
+  python3* \
+  sdbusplus \
+  service_registry.h \
+  video-service \
+  video_object_detection_subscriber.h \
+  video_scene_subscriber.h
 
-COPY --from=api ${API_DIR}/lib/libglib-2.0* \
-  ${API_DIR}/lib/libpcre* \
-  ${API_DIR}/lib/libpthread* \
-  ${API_DIR}/lib/libgobject* \
-  ${API_DIR}/lib/libxmlnode* \
-  ${API_DIR}/lib/libglib-utils* \
-  ${API_DIR}/lib/libsystemd* \
-  ${API_DIR}/lib/libgio-2.0* \
-  ${API_DIR}/lib/libconfutils* \
-  ${API_DIR}/lib/libexpat* \
-  ${API_DIR}/lib/libffi* \
-  ${API_DIR}/lib/librt* \
-  ${API_DIR}/lib/libcap* \
-  ${API_DIR}/lib/libgmodule-2.0* \
-  ${API_DIR}/lib/libz* \
-  ${API_DIR}/lib/libresolv* \
-  ${API_DIR}/lib/libdl* \
-  ${API_DIR}/lib/libm* \
-  ${API_DIR}/lib/libcrypto* \
-  ${API_DIR}/lib/libpixman-1* \
-  ${API_DIR}/lib/libfontconfig* \
-  ${API_DIR}/lib/libfreetype* \
-  ${API_DIR}/lib/libpng* \
-  ${API_DIR}/lib/libuuid* \
-  ${API_DIR}/lib/libexpat* \
-  ${API_DIR}/lib/libjansson* ${NATIVE_DIR}/lib/
 
 # Make the environment sourced for interactive Bash users
 RUN printf "\n# Source SDK for all users\n. /opt/axis/acapsdk/environment-*\n" >> /etc/bash.bashrc
