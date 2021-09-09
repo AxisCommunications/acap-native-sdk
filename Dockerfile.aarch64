@@ -41,7 +41,7 @@ RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-s
   sed -i '/\(CC\|CPP\|CXX\)=/s:"$: -L$SDKTARGETSYSROOT/usr/lib":g' /opt/axis/acapsdk/environment-setup*
 
 # Copy the lib, include, .pc files from the API container
-ARG ARCH=armv7hf
+ARG ARCH=aarch64
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
 
@@ -54,7 +54,7 @@ WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib
 RUN rm -rf \
   *.d \
   apr-util* \
-  arm-poky-linux-gnueabi \
+  *-poky-linux* \
   conf-migrate \
   dbus-* \
   gdk-pixbuf-* \
@@ -71,7 +71,7 @@ RUN rm -rf \
 
 # Remove legacy API's files and symlinks in SDKPATH/usr/lib
 RUN rm -f \
-  arm-poky-linux-gnueabihf \
+  *-poky-linux* \
   apr* \
   libapac* \
   libapr* \
