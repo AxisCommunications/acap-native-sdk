@@ -40,7 +40,7 @@ RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tool
 RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup* && \
   sed -i '/\(CC\|CPP\|CXX\)=/s:"$: -L$SDKTARGETSYSROOT/usr/lib":g' /opt/axis/acapsdk/environment-setup*
 
-# Copy the lib, include, .pc files from the API container
+# Copy the lib, include and .pc files from the API container
 ARG ARCH=armv7hf
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
@@ -49,7 +49,7 @@ COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acaps
 ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
 RUN curl --create-dirs -o ${KHR_DIR}/khrplatform.h https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h
 
-# Remove legacy API's directories in SDKPATH/usr/lib
+# Remove legacy directories in SDKPATH/usr/lib
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib
 RUN rm -rf \
   *.d \
@@ -69,7 +69,7 @@ RUN rm -rf \
   systemd \
   udev
 
-# Remove legacy API's files and symlinks in SDKPATH/usr/lib
+# Remove legacy files and symlinks in SDKPATH/usr/lib
 RUN rm -f \
   *-poky-linux* \
   apr* \
@@ -115,7 +115,7 @@ RUN rm -f \
   libyuv* \
   os-release
 
-# Remove legacy API's files and symlinks in SDKPATH/usr/lib/pkgconfig
+# Remove legacy files and symlinks in SDKPATH/usr/lib/pkgconfig
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/pkgconfig
 RUN rm -rf \
   apr* \
@@ -144,7 +144,7 @@ RUN rm -rf \
   video-object-detection-subscriber.pc \
   video-scene-subscriber.pc
 
-# Remove legacy API's directories and files in SDKPATH/usr/include
+# Remove legacy directories and files in SDKPATH/usr/include
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/include
 RUN rm -rf \
   apr* \
