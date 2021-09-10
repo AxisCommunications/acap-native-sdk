@@ -30,29 +30,7 @@ For more details about C++ support, see [C++ Standards Support in GCC](https://g
 [libstdc++ Implementation Status](https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html).
 
 # Examples
-## Classic ACAP application
-Building a classic ACAP example with ACAP Native SDK:
-```bash
-docker build . --tag native_example_application --build-arg VERSION=1.0-beta1 --build-arg SDK=acap-native-sdk
-```
-
-Classic application examples supported by ACAP Native SDK:
-* [axevent](https://github.com/AxisCommunications/acap3-examples/tree/master/axevent/)
-* [axoverlay](https://github.com/AxisCommunications/acap3-examples/tree/master/axoverlay/)
-* [larod](https://github.com/AxisCommunications/acap3-examples/tree/master/larod/)
-* [licensekey](https://github.com/AxisCommunications/acap3-examples/tree/master/licensekey/)
-* [object-detection](https://github.com/AxisCommunications/acap3-examples/blob/master/object-detection)
-* [reproducible-package](https://github.com/AxisCommunications/acap3-examples/blob/master/reproducible-package)
-* [tensorflow-to-larod](https://github.com/AxisCommunications/acap3-examples/tree/master/tensorflow-to-larod/)
-* [using-opencv](https://github.com/AxisCommunications/acap3-examples/tree/master/using-opencv/)
-* [vdostream](https://github.com/AxisCommunications/acap3-examples/tree/master/vdostream/)
-* [vdo-larod](https://github.com/AxisCommunications/acap3-examples/tree/master/vdo-larod/)
-* [vdo-larod-preprocessing](https://github.com/AxisCommunications/acap3-examples/tree/master/vdo-larod-preprocessing/)
-* [vdo-opencl-filtering](https://github.com/AxisCommunications/acap3-examples/blob/master/vdo-opencl-filtering/)
-
-## Container based application
-Container based application examples supported by ACAP Native SDK:
-* [opencl-fft](https://github.com/AxisCommunications/acap-application-examples/tree/master/opencl-fft/)
+Native ACAP Application examples are available on GitHub: [acap-native-sdk-examples](https://github.com/AxisCommunications/acap-native-sdk-examples)
 
 # License
 By downloading ACAP Native SDK you automatically agree to the terms in the [license agreement](https://www.axis.com/techsup/developer_doc/EULA/LICENSE.pdf)
