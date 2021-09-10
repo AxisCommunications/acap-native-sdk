@@ -30,7 +30,7 @@ For more details about C++ support, see [C++ Standards Support in GCC](https://g
 [libstdc++ Implementation Status](https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html).
 
 # Examples
-Native ACAP Application examples are available on GitHub [acap-native-sdk-examples](https://github.com/AxisCommunications/acap-native-sdk-examples).
+Native ACAP Application examples are available on GitHub: [acap-native-sdk-examples](https://github.com/AxisCommunications/acap-native-sdk-examples)
 
 # License
 By downloading ACAP Native SDK you automatically agree to the terms in the [license agreement](https://www.axis.com/techsup/developer_doc/EULA/LICENSE.pdf)
