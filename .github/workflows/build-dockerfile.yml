@@ -1,0 +1,28 @@
+name: Control Dockerfiles
+on:
+  push:
+    paths:
+      - 'Dockerfile*'
+      - '.github/workflows/build-dockerfile.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Control that Dockerfile build
+        run: |
+          archs="aarch64 armv7hf"
+          testtag=buildcheck
+          for arch in $archs
+          do
+            printf "\n\n### Build Dockerfile.$arch\n"
+            docker build -t $testtag:$arch -f Dockerfile.$arch .
+          done
+
+          for arch in $archs
+          do
+            printf "\n\n### Clean Dockerfile.$arch\n"
+            docker image rm -f $testtag:$arch
+          done
+
+          printf "\n\n### All Dockerfiles build"
