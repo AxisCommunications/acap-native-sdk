@@ -6,10 +6,10 @@ The table below shows API and firmware version compatibility.
 
 | API Version | Firmware | Comment|
 | ---------------- | ------------- |------------- |
-| 1.0-alpha1       | 10.5         | Initial version forked from acap3-sdk |
-| 1.0-beta1        | 10.6         | Updated API to 3.4 and Toolchain to 3.4.1_beta1|
-| 1.0-beta2        | 10.7         | Updated API and Toolchain to 4.0_beta2|
 | 1.0              | 10.7         | Updated API and Toolchain to 4.0|
+| 1.0-beta2        | 10.7         | Updated API and Toolchain to 4.0_beta2|
+| 1.0-beta1        | 10.6         | Updated API to 3.4 and Toolchain to 3.4.1_beta1|
+| 1.0-alpha1       | 10.5         | Initial version forked from acap3-sdk |
 
 # APIs
 The following APIs are supported:
