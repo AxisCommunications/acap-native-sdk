@@ -7,22 +7,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: ["armv7hf", "aarch64"]
     steps:
       - uses: actions/checkout@v2
-      - name: Control that Dockerfile build
-        run: |
-          archs="aarch64 armv7hf"
-          testtag=buildcheck
-          for arch in $archs
-          do
-            printf "\n\n### Build Dockerfile.$arch\n"
-            docker build -t $testtag:$arch -f Dockerfile.$arch .
-          done
-
-          for arch in $archs
-          do
-            printf "\n\n### Clean Dockerfile.$arch\n"
-            docker image rm -f $testtag:$arch
-          done
-
-          printf "\n\n### All Dockerfiles build"
+      - name: Control that Dockerfile builds
+        uses: docker/build-push-action@v2
+        with:
+          file: "Dockerfile.${{ matrix.arch }}"
+          push: false
