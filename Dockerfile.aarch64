@@ -88,6 +88,7 @@ RUN rm -f \
   libbbox* \
   libboost_* \
   libcapture* \
+  libcrypto* \
   libfcgi* \
   libicu* \
   libjpeg* \
@@ -133,6 +134,7 @@ RUN rm -rf \
   fcgi* \
   gdk-pixbuf-* \
   icu* \
+  libcrypto.pc \
   libprotobuf-c.pc \
   libscene.pc \
   libssl.pc \
