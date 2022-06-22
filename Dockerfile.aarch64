@@ -56,7 +56,6 @@ WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib
 RUN rm -rf \
   *.d \
   apr-util* \
-  *-poky-linux* \
   conf-migrate \
   dbus-* \
   gdk-pixbuf-* \
@@ -73,7 +72,6 @@ RUN rm -rf \
 
 # Remove legacy files and symlinks in SDKPATH/usr/lib
 RUN rm -f \
-  *-poky-linux* \
   apr* \
   libapac* \
   libapr* \
