@@ -47,6 +47,12 @@ ARG ARCH=aarch64
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
 
+# Add a new variable to get libc startfiles for linking listed and add to sourcing script
+# First the GCC version in path is fetched
+RUN gcc_ver=$(ls /opt/axis/acapsdk/sysroots/*/usr/lib/*-poky-linux*) && \
+  sed -i "/^export SDKTARGETSYSROOT/ s:\$:\nexport START_FILES=\"-nostartfiles \$SDKTARGETSYSROOT/usr/lib/Scrt1.o \$SDKTARGETSYSROOT/usr/lib/crti.o \$SDKTARGETSYSROOT/usr/lib/crtn.o \$SDKTARGETSYSROOT/usr/lib/*-poky-linux/${gcc_ver}/crtbeginS.o \$SDKTARGETSYSROOT/usr/lib/*-poky-linux/${gcc_ver}/crtendS.o\":" /opt/axis/acapsdk/environment-setup* && \
+  sed -i '/\(CC\|CXX\)=/s:"$: $START_FILES":g' /opt/axis/acapsdk/environment-setup*
+
 # Add a missing file for OpenGL
 ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
 RUN curl --create-dirs -o ${KHR_DIR}/khrplatform.h https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h
