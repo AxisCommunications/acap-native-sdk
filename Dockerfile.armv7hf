@@ -1,13 +1,14 @@
 # Repository and tag variables
 ARG ARCH=armv7hf
-ARG VERSION=4.2
+ARG API_VERSION=4.2
 ARG TOOLCHAIN_VERSION=4.2
-ARG UBUNTU_VERSION=20.04
+ARG TOOLCHAINS_UBUNTU_VERSION=20.04
+ARG SDK_UBUNTU_VERSION=20.04
 ARG REPO=axisecp
 
-FROM ${REPO}/acap-api:${VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as api
-FROM ${REPO}/acap-toolchain:${TOOLCHAIN_VERSION}-${ARCH}-ubuntu${UBUNTU_VERSION} as toolchain
-FROM ubuntu:${UBUNTU_VERSION}
+FROM ${REPO}/acap-api:${API_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as api
+FROM ${REPO}/acap-toolchain:${TOOLCHAIN_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as toolchain
+FROM ubuntu:${SDK_UBUNTU_VERSION}
 
 # Install packages needed for interactive users and some additional libraries
 # - curl, iputils-ping: required by eap-install.sh
