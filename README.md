@@ -6,6 +6,7 @@ The table below shows API and firmware version compatibility.
 
 | API Version | Firmware | Comment|
 | ---------------- | ------------- |------------- |
+| 1.4_rc4 | 11.0 | API and Toolchain version 4.4_rc4 |
 | 1.4_rc1 | 11.0 | API and Toolchain version 4.4_rc1 |
 | 1.4_beta1 | 11.0 | API and Toolchain version 4.4_beta1 |
 | 1.3 | 10.12 | API and Toolchain version 4.3 |
