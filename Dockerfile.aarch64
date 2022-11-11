@@ -89,7 +89,6 @@ RUN rm -f \
   libbbox* \
   libboost_* \
   libcapture* \
-  libfcgi* \
   libicu* \
   libjpeg* \
   liblzma* \
@@ -131,7 +130,6 @@ RUN rm -rf \
   axstorage.pc \
   bbox.pc \
   dbus-* \
-  fcgi* \
   gdk-pixbuf-* \
   icu* \
   libprotobuf-c.pc \
@@ -164,7 +162,6 @@ RUN rm -rf \
   bbox.h \
   capture* \
   dbus-* \
-  fcgi* \
   gmock \
   google \
   gtest \
