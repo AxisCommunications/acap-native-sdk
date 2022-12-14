@@ -81,7 +81,6 @@ RUN rm -f \
   libax_daemon* \
   libaxaudio* \
   libaxhttp* \
-  libaxlog* \
   libaxparameter* \
   libaxptz* \
   libaxserialport* \
@@ -121,7 +120,6 @@ RUN rm -rf \
   apr* \
   axaudio.pc \
   axhttp.pc \
-  axlog.pc \
   axparameter.pc \
   axptz.pc \
   axserialport.pc \
@@ -147,7 +145,6 @@ RUN rm -rf \
   apr* \
   ax_daemon.h \
   axis \
-  axlog* \
   axsdk/axaudio* \
   axsdk/ax_parameter* \
   axsdk/axparameter* \
