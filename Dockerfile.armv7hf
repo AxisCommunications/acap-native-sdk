@@ -112,8 +112,6 @@ RUN rm -f \
   libturbojpeg* \
   libubsan* \
   libudev* \
-  libvideo_scene_subscriber* \
-  libvideo-object-detection-subscriber* \
   libyuv* \
   os-release
 
@@ -141,9 +139,7 @@ RUN rm -rf \
   python* \
   sdbusplus.pc \
   service_registry.pc \
-  video-service \
-  video-object-detection-subscriber.pc \
-  video-scene-subscriber.pc
+  video-service
 
 # Remove legacy directories and files in SDKPATH/usr/include
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/include
@@ -173,9 +169,7 @@ RUN rm -rf \
   python3* \
   sdbusplus \
   service_registry.h \
-  video-service \
-  video_object_detection_subscriber.h \
-  video_scene_subscriber.h
+  video-service
 
 
 # Make the environment sourced for interactive Bash users
