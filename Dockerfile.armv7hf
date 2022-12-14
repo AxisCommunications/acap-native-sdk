@@ -47,6 +47,7 @@ RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-s
 ARG ARCH=armv7hf
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
+COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/share/protobuf/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/share/protobuf/
 
 # Add a missing file for OpenGL
 ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
