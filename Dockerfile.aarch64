@@ -47,6 +47,7 @@ RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-s
 ARG ARCH=aarch64
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
+COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/share/protobuf/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/share/protobuf/
 
 # Add a missing file for OpenGL
 ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
@@ -81,7 +82,6 @@ RUN rm -f \
   libax_daemon* \
   libaxaudio* \
   libaxhttp* \
-  libaxlog* \
   libaxparameter* \
   libaxptz* \
   libaxserialport* \
@@ -112,8 +112,6 @@ RUN rm -f \
   libturbojpeg* \
   libubsan* \
   libudev* \
-  libvideo_scene_subscriber* \
-  libvideo-object-detection-subscriber* \
   libyuv* \
   os-release
 
@@ -123,7 +121,6 @@ RUN rm -rf \
   apr* \
   axaudio.pc \
   axhttp.pc \
-  axlog.pc \
   axparameter.pc \
   axptz.pc \
   axserialport.pc \
@@ -141,9 +138,7 @@ RUN rm -rf \
   python* \
   sdbusplus.pc \
   service_registry.pc \
-  video-service \
-  video-object-detection-subscriber.pc \
-  video-scene-subscriber.pc
+  video-service
 
 # Remove legacy directories and files in SDKPATH/usr/include
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/include
@@ -151,7 +146,6 @@ RUN rm -rf \
   apr* \
   ax_daemon.h \
   axis \
-  axlog* \
   axsdk/axaudio* \
   axsdk/ax_parameter* \
   axsdk/axparameter* \
@@ -173,9 +167,7 @@ RUN rm -rf \
   python3* \
   sdbusplus \
   service_registry.h \
-  video-service \
-  video_object_detection_subscriber.h \
-  video_scene_subscriber.h
+  video-service
 
 
 # Make the environment sourced for interactive Bash users
