@@ -89,12 +89,21 @@ RUN rm -f \
   libbbox* \
   libboost_* \
   libcapture* \
+  libcurl* \
+  libgcrypt* \
+  libgmp* \
+  libgnutls* \
+  libgpg-error* \
+  libhogweed* \
   libicu* \
   libjpeg* \
   liblzma* \
+  libmagic* \
   libmenu* \
+  libmicrohttpd* \
   libmount* \
   libnet_http* \
+  libnettle* \
   libpango* \
   libparam* \
   libprotobuf* \
@@ -107,11 +116,13 @@ RUN rm -f \
   libservice_registry* \
   libsmartcols* \
   libsqlite* \
-  libss* \
+  libssh2* \
+  libssl* \
   libti* \
   libturbojpeg* \
   libubsan* \
   libudev* \
+  libuser_manager* \
   libyuv* \
   os-release
 
@@ -128,10 +139,22 @@ RUN rm -rf \
   bbox.pc \
   dbus-* \
   gdk-pixbuf-* \
+  gmp.pc \
+  gmpxx.pc \
+  gnutls.pc \
+  gpg-error.pc \
+  hogweed.pc \
   icu* \
+  libcurl.pc \
+  libgcrypt.pc \
+  libmagic.pc \
+  libmicrohttpd.pc \
   libprotobuf-c.pc \
   libscene.pc \
+  libssh2.pc \
   libssl.pc \
+  libuser_manager.pc \
+  nettle.pc \
   openssl.pc \
   pango* \
   protobuf* \
@@ -146,20 +169,32 @@ RUN rm -rf \
   apr* \
   ax_daemon.h \
   axis \
-  axsdk/axaudio* \
   axsdk/ax_parameter* \
-  axsdk/axparameter* \
+  axsdk/axaudio* \
   axsdk/axhttp* \
+  axsdk/axparameter* \
   axsdk/axptz* \
   axsdk/axserialport* \
   axsdk/axstorage* \
   bbox.h \
   capture* \
+  curl \
   dbus-* \
+  gcrypt.h \
   gmock \
+  gmp-32.h \
+  gmp.h \
+  gmpxx.h \
+  gnutls \
   google \
+  gpg-error* \
+  gpgrt* \
   gtest \
+  libssh2* \
   libyuv* \
+  magic.h \
+  microhttpd.h \
+  nettle \
   openssl \
   pango-* \
   protobuf-c \
