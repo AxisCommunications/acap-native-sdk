@@ -27,8 +27,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   vim
 
 # Support for SBOM.
-# One of the reccomanded dependencies of cmake is needed to use conana, 
+# One of the reccomanded dependencies of cmake is needed to build opencv, 
 # it won't be needed anymore when https://github.com/conan-io/conan-center-index/pull/17367 is fixed and we can disable dnn.
+# We might want to move this apt-get of cmake into the example instead here, since it is application specific.
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y cmake
 RUN pip3 install meson

@@ -26,7 +26,11 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   ninja-build \
   vim
 
-#Support for SBOM, one of the reccomanded dependencies of cmake is needed to use conana
+# Support for SBOM.
+# One of the reccomanded dependencies of cmake is needed to build opencv, 
+# it won't be needed anymore when https://github.com/conan-io/conan-center-index/pull/17367 is fixed and we can disable dnn.
+# We might want to move this apt-get of cmake into the example instead here, since it is application specific.
+
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y cmake
 RUN pip3 install meson
 RUN pip3 install conan
@@ -65,7 +69,7 @@ RUN curl --create-dirs -o ${KHR_DIR}/khrplatform.h https://raw.githubusercontent
 COPY acap-build /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/acap-build
 COPY create-package.sh /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/create-package.sh
 COPY lock_parser /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/lock_parser
-COPY profiles/ /opt/axis/acapsdk/sysroots/profiles
+COPY profiles /opt/axis/acapsdk/sysroots/profiles
 RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/acap-build
 RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/create-package.sh
 RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/lock_parser
