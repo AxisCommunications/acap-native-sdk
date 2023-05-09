@@ -1,7 +1,7 @@
 # Repository and tag variables
 ARG ARCH=armv7hf
-ARG API_VERSION=4.8_rc1
-ARG TOOLCHAIN_VERSION=4.8_rc1
+ARG API_VERSION=4.8
+ARG TOOLCHAIN_VERSION=4.8
 ARG TOOLCHAINS_UBUNTU_VERSION=22.04
 ARG SDK_UBUNTU_VERSION=22.04
 ARG REPO=axisecp
@@ -23,7 +23,14 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   xz-utils \
   git \
   less \
+  ninja-build \
   vim
+
+#Support for SBOM, one of the reccomanded dependencies of cmake is needed to use conana
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y cmake
+RUN pip3 install meson
+RUN pip3 install conan
+RUN curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
 
 # Add symlink for python
 RUN cd /usr/bin && ln -s python3 python
@@ -36,6 +43,7 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 
 # Add axis-acap-manifest-tools to PATH
 RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tools/manifest-generator:#g' /opt/axis/acapsdk/environment-setup*
+RUN grep -n "export" /opt/axis/acapsdk/environment-setup* | tail -n 1 |  cut -d ":" -f 1 |  xargs -I {} sed -i '{}i export PKG_CONFIG=pkg-config' /opt/axis/acapsdk/environment-setup*
 
 # Update paths and add explicit sdk path to linker in environment-setup script
 # Add the --disable-new-dtags parameter to the default LDFLAGS to solve dynamic library rpath issues
@@ -44,7 +52,7 @@ RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-s
   sed -i '/^export LDFLAGS=/ s:"$: -Wl,--disable-new-dtags":' /opt/axis/acapsdk/environment-setup*
 
 # Copy the lib, include and .pc files from the API container
-ARG ARCH=armv7hf
+ARG ARCH
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/share/protobuf/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/share/protobuf/
@@ -52,6 +60,15 @@ COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/share/protobuf/ /opt/axi
 # Add a missing file for OpenGL
 ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
 RUN curl --create-dirs -o ${KHR_DIR}/khrplatform.h https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h
+
+#Add PoC to generate SBOM
+COPY acap-build /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/acap-build
+COPY create-package.sh /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/create-package.sh
+COPY lock_parser /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/lock_parser
+COPY profiles/ /opt/axis/acapsdk/sysroots/profiles
+RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/acap-build
+RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/create-package.sh
+RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/lock_parser
 
 # Remove legacy directories in SDKPATH/usr/lib
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib

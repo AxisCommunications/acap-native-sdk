@@ -1,0 +1,204 @@
+#!/usr/bin/env python3
+""" Create an ACAP application package with a manifest """
+import argparse
+import textwrap
+import json
+import os
+import subprocess as subp
+import tempfile
+
+from io import TextIOWrapper
+
+import jsonschema
+
+
+""" str: Absolute real path to manifest tools """
+MANIFEST_TOOLS_PATH = "/opt/axis/acapsdk/axis-acap-manifest-tools"
+
+
+def validate_and_add_architecture(manifest: dict) -> str:
+    def versiontuple(v):
+        return tuple(map(int, (v.split("."))))
+
+    schema_version = manifest["schemaVersion"]
+    if versiontuple(schema_version) < versiontuple("1.3"):
+        # Don't add architecture to manifests prior to version 1.3
+        return
+
+    if 'OECORE_TARGET_ARCH' not in os.environ:
+        raise EnvironmentError(
+            'OECORE_TARGET_ARCH not set; you are probably not within the ACAP SDK')
+
+    environment_arch = os.environ['OECORE_TARGET_ARCH']
+    target_arch = None
+
+    # Get the target architecture
+    if environment_arch == "aarch64":
+        target_arch = "aarch64"
+    elif environment_arch == "arm":
+        target_arch = "armv7hf"
+    else:
+        raise EnvironmentError(
+            f"acap-build is running in an unknown architecture: {environment_arch}")
+
+    # Get the manifest architecture
+    manifest_arch = None
+    if "architecture" in manifest["acapPackageConf"]["setup"]:
+        manifest_arch = manifest["acapPackageConf"]["setup"]["architecture"]
+
+    # Compare and add architecture to manifest if needed
+    if manifest_arch is None:
+        manifest["acapPackageConf"]["setup"]["architecture"] = target_arch
+    elif manifest_arch != "all" and manifest_arch != target_arch:
+        raise AttributeError(
+            f"Architecture mismatch, the manifest architecture is {manifest_arch} while the build target architecture is {target_arch}")
+
+    return target_arch if manifest_arch is None else manifest_arch
+
+
+def get_preuninstall_script_path(manifest: dict):
+    """
+    Get the path of the pre uninstall script if there is one.
+    Return None otherwise.
+    """
+    if "uninstallation" in manifest["acapPackageConf"]:
+        if "preUninstallScript" in manifest["acapPackageConf"]["uninstallation"]:
+            return manifest["acapPackageConf"]["uninstallation"]["preUninstallScript"]
+
+    return None
+
+def get_schema_path(version: str) -> str:
+    """ Get absolute path to schema file from version string """
+    schemas_path = os.path.join(MANIFEST_TOOLS_PATH, "schema", "schemas")
+    schema_suffix = ".json"
+    for dirpath, _, filenames in os.walk(schemas_path):
+        for filename in filenames:
+            if version in ["1.0", "1.1", "1.2", "1.3"]:
+                if version + schema_suffix in filename:
+                    filepath = os.path.join(dirpath, filename)
+                    return os.path.abspath(os.path.realpath(filepath))
+            else:
+                if version in filename:
+                    filepath = os.path.join(dirpath, filename)
+                    return os.path.abspath(os.path.realpath(filepath))
+
+    return None
+
+
+def validate_manifest(manifest: dict):
+    """ Validate manifest against listed schema version """
+    schema_version = manifest["schemaVersion"]
+    schema_path = get_schema_path(schema_version)
+    try:
+        with open(schema_path) as schema_file:
+            schema = json.load(schema_file)
+    except TypeError:
+        raise ValueError("No schema mathching schema version '{}'.".format(
+            schema_version))
+
+    jsonschema.validate(manifest, schema)
+
+def generate_packageconf(manifest_file: TextIOWrapper, additional_files: list):
+    """ Generate 'package.conf' and relating files from manifest """
+    manifest_path = os.path.realpath(manifest_file.name)
+    build_path, _ = os.path.split(manifest_path)
+    tools_path = os.path.join(MANIFEST_TOOLS_PATH, "manifest-generator")
+    cmd = os.path.join(tools_path, "manifest2packageconf.py")
+    args = [cmd, manifest_path,
+            "--output", build_path, "--force", "--quiet"]
+
+    if additional_files:
+            args += ["--additional-files", *additional_files]
+
+    try:
+        subp.run(args, check=True)
+    except subp.CalledProcessError:
+        exit(1)
+
+
+def create_package(architecture: str, buildpath: str, manifest_file_name: str, meson: bool):
+    """ Package ACAP application as eap file """
+
+    # If the architecture is "all" we don't require a makefile since the
+    # executable should be a script that might not need to be built
+    run_make_param = ""
+    run_architecture = ""
+    if (not os.path.exists(os.path.join(buildpath, "Makefile"))
+       and architecture == "all"):
+        run_make_param = "--no-make"
+    if meson:
+        print("Building with meson")
+        run_make_param ="--meson"
+        run_architecture = architecture
+        
+    run_command = ["create-package.sh", "-m", manifest_file_name,
+                  "--no-validate", run_make_param, run_architecture]
+
+    try:
+        subp.run(run_command, cwd=buildpath, check=True)
+    except subp.CalledProcessError:
+        exit(1)
+
+
+def main():
+    """ Parse command line arguments and convert file """
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=textwrap.dedent("""\
+        note:
+          the manifest and any additional files must be located in the build
+          directory
+        """))
+    parser.add_argument("path",
+                        help="path to build directory, usually .")
+    parser.add_argument("-m", "--manifest", default="manifest.json",
+                        help="name of manifest, default is path/manifest.json")
+    parser.add_argument("-a", "--additional-file", action="append",
+                        default=[], help="""additional file to include -
+                        can be used multiple times""")
+    parser.add_argument("--meson", action="store_true",
+                        default=False, help="""build with meson instead of make""")
+     
+    args = parser.parse_args()
+
+    try:
+        manifest_path = os.path.join(args.path, args.manifest)
+        manifest_file = open(manifest_path)
+        manifest = json.load(manifest_file)
+    except FileNotFoundError:
+        msg = "argument -m/--manifest: No such file: '{}'"
+        parser.error(msg.format(manifest_path))
+    except json.decoder.JSONDecodeError as exception:
+        exit("Manifest contains JSON syntax errors.\n" + str(exception))
+    finally:
+        manifest_file.close()
+
+    additional_files = [os.path.join(args.path, file_)
+                        for file_ in args.additional_file]
+
+    # Add the pre uninstall script to additional files if we have one
+    preuninstall_script_path = get_preuninstall_script_path(manifest)
+    if preuninstall_script_path:
+        additional_files.append(preuninstall_script_path)
+
+    if not os.path.exists(MANIFEST_TOOLS_PATH):
+        exit("Missing manifest tools. Please install them.")
+
+    architecture = validate_and_add_architecture(manifest)
+    validate_manifest(manifest)
+
+    # Write the modified manifest to a temporary file
+    tmp_manifest_file = tempfile.NamedTemporaryFile(dir=args.path, mode="wt", delete=False)
+    tmp_manifest_file.write(json.dumps(manifest, indent=4))
+    tmp_manifest_file.close()
+
+    # Create the package using the temporary manifest file
+    generate_packageconf(manifest_file, additional_files)
+    create_package(architecture, args.path, os.path.basename(tmp_manifest_file.name), args.meson)
+
+    # Cleanup
+    os.remove(tmp_manifest_file.name)
+
+
+if __name__ == "__main__":
+    main()

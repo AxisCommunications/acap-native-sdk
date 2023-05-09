@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+import json
+
+with open('conan.lock') as lock_file:
+    input_data = json.load(lock_file)
+
+requires = input_data["requires"]
+build_requires = input_data["build_requires"]
+
+#Remove after # from requires
+stripped_requires = list(map(lambda it: it.split("#")[0], requires))
+stripped_build_requires = list(map(lambda it: it.split("#")[0], build_requires))
+
+#Put everything in a file
+with open('conanfile.txt', 'w') as f:
+    f.write("[requires]\n")
+    f.write('\n'.join(stripped_requires))
+    f.write("\n[tool_requires]\n")
+    f.write('\n'.join(stripped_build_requires))
