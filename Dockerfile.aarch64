@@ -65,14 +65,6 @@ COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/share/protobuf/ /opt/axi
 ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
 RUN curl --create-dirs -o ${KHR_DIR}/khrplatform.h https://raw.githubusercontent.com/KhronosGroup/EGL-Registry/master/api/KHR/khrplatform.h
 
-#Add PoC to generate SBOM
-COPY acap-build /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/acap-build
-COPY create-package.sh /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/create-package.sh
-COPY lock_parser /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/lock_parser
-COPY profiles /opt/axis/acapsdk/sysroots/profiles
-RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/acap-build
-RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/create-package.sh
-RUN chmod +x /opt/axis/acapsdk/sysroots/x86_64-pokysdk-linux/usr/bin/lock_parser
 
 # Remove legacy directories in SDKPATH/usr/lib
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib
