@@ -47,7 +47,3 @@ For more details about C++ support, see [C++ Standards Support in GCC](https://g
 
 # Examples
 Native ACAP Application examples are available on GitHub: [acap-native-sdk-examples](https://github.com/AxisCommunications/acap-native-sdk-examples)
-
-# License
-
-ACAP Native SDK open source licenses and copyleft source code are found [here](http://acap-artifacts.s3-website.eu-north-1.amazonaws.com/)
