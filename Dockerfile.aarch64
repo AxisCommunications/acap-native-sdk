@@ -82,10 +82,7 @@ RUN rm -f \
   libax_daemon* \
   libaxaudio* \
   libaxhttp* \
-  libaxparameter* \
   libaxptz* \
-  libaxserialport* \
-  libaxstorage* \
   libbbox* \
   libboost_* \
   libcapture* \
@@ -132,10 +129,7 @@ RUN rm -rf \
   apr* \
   axaudio.pc \
   axhttp.pc \
-  axparameter.pc \
   axptz.pc \
-  axserialport.pc \
-  axstorage.pc \
   bbox.pc \
   dbus-* \
   gdk-pixbuf-* \
@@ -169,13 +163,9 @@ RUN rm -rf \
   apr* \
   ax_daemon.h \
   axis \
-  axsdk/ax_parameter* \
   axsdk/axaudio* \
   axsdk/axhttp* \
-  axsdk/axparameter* \
   axsdk/axptz* \
-  axsdk/axserialport* \
-  axsdk/axstorage* \
   bbox.h \
   capture* \
   curl \
