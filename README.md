@@ -29,6 +29,7 @@ The table below shows API and firmware version compatibility.
 The following APIs are supported:
   * AxEvent
   * AxOverlay
+  * AxParameter
   * Cairo
   * Larod
   * Licensekey
