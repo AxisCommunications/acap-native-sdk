@@ -30,6 +30,7 @@ The following APIs are supported:
   * AxEvent
   * AxOverlay
   * AxParameter
+  * AxSerialport
   * AxStorage
   * Cairo
   * Larod
