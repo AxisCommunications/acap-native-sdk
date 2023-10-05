@@ -83,7 +83,6 @@ RUN rm -f \
   libaxaudio* \
   libaxhttp* \
   libaxptz* \
-  libaxserialport* \
   libbbox* \
   libboost_* \
   libcapture* \
@@ -131,7 +130,6 @@ RUN rm -rf \
   axaudio.pc \
   axhttp.pc \
   axptz.pc \
-  axserialport.pc \
   bbox.pc \
   dbus-* \
   gdk-pixbuf-* \
@@ -168,7 +166,6 @@ RUN rm -rf \
   axsdk/axaudio* \
   axsdk/axhttp* \
   axsdk/axptz* \
-  axsdk/axserialport* \
   bbox.h \
   capture* \
   curl \
