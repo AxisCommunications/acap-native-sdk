@@ -16,6 +16,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   crossbuild-essential-armhf \
   make \
   pkg-config \
+  patchelf \
   python3-pip \
   python3-jsonschema \
   curl \
