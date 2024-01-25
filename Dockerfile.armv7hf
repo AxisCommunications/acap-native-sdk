@@ -16,6 +16,7 @@ FROM ubuntu:${SDK_UBUNTU_VERSION}
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   crossbuild-essential-armhf \
   make \
+  automake \
   pkg-config \
   patchelf \
   python3-pip \
@@ -54,6 +55,30 @@ RUN . /opt/axis/acapsdk/environment-setup* && \
     echo "# QEMU variables" >> $env_script && \
     echo "export QEMU_LD_PREFIX=$SDKTARGETSYSROOT/usr" >> $env_script && \
     echo "export LD_LIBRARY_PATH=$SDKTARGETSYSROOT/usr/lib"  >> $env_script
+
+# Build Valgrind
+ARG BUILD_DIR=/opt/build
+ARG VALGRIND_VER=3.22.0
+ARG VALGRIND_BUILD_PATH=${BUILD_DIR}/valgrind
+ARG VALGRIND_BUILD_DIR=${VALGRIND_BUILD_PATH}/valgrind-${VALGRIND_VER}
+ARG VALGRIND_INSTALL_DIR=${VALGRIND_BUILD_PATH}/install
+
+WORKDIR $VALGRIND_BUILD_PATH
+RUN curl -O https://sourceware.org/pub/valgrind/valgrind-${VALGRIND_VER}.tar.bz2 && \
+    tar xvf valgrind-${VALGRIND_VER}.tar.bz2
+
+WORKDIR $VALGRIND_BUILD_DIR
+# COPY ./valgrind-make-ld-XXX.so-strlen-intercept-optional.patch_redir.patch . -----> valgrind-make-ld-XXX.so-strlen-intercept-optional.patch
+# RUN patch -p1 <./coregrind-m_redir.patch
+RUN . /opt/axis/acapsdk/environment-setup* && \
+    autoreconf -fi && \
+    ./configure \
+      --host=armv7-linux-gnueabihf \
+      --prefix=${VALGRIND_INSTALL_DIR} && \
+    make && \
+    make install
+
+RUN cp $VALGRIND_INSTALL_DIR/bin/valgrind /usr/bin/
 
 # Copy the lib, include and .pc files from the API container
 ARG ARCH=armv7hf
