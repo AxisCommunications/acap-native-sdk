@@ -64,7 +64,6 @@ RUN rm -rf \
   gdk-pixbuf-* \
   icu \
   legacyconfig \
-  cmake/mdb* \
   modules \
   opkg \
   python3* \
@@ -97,7 +96,6 @@ RUN rm -f \
   libjpeg* \
   liblzma* \
   libmagic* \
-  libmdb* \
   libmenu* \
   libmicrohttpd* \
   libmount* \
@@ -150,8 +148,6 @@ RUN rm -rf \
   libssh2.pc \
   libssl.pc \
   libuser_manager.pc \
-  mdb.pc \
-  mdb_cpp.pc \
   nettle.pc \
   openssl.pc \
   pango* \
@@ -187,7 +183,6 @@ RUN rm -rf \
   libssh2* \
   libyuv* \
   magic.h \
-  mdb* \
   microhttpd.h \
   nettle \
   openssl \
