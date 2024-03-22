@@ -68,7 +68,6 @@ RUN rm -rf \
   opkg \
   python3* \
   rcscripts \
-  ssl-* \
   service_registry \
   systemd \
   udev
@@ -86,7 +85,6 @@ RUN rm -f \
   libbbox* \
   libboost_* \
   libcapture* \
-  libcurl* \
   libgcrypt* \
   libgmp* \
   libgnutls* \
@@ -114,7 +112,6 @@ RUN rm -f \
   libsmartcols* \
   libsqlite* \
   libssh2* \
-  libssl* \
   libti* \
   libturbojpeg* \
   libubsan* \
@@ -139,17 +136,14 @@ RUN rm -rf \
   gpg-error.pc \
   hogweed.pc \
   icu* \
-  libcurl.pc \
   libgcrypt.pc \
   libmagic.pc \
   libmicrohttpd.pc \
   libprotobuf-c.pc \
   libscene.pc \
   libssh2.pc \
-  libssl.pc \
   libuser_manager.pc \
   nettle.pc \
-  openssl.pc \
   pango* \
   protobuf* \
   python* \
@@ -168,7 +162,6 @@ RUN rm -rf \
   axsdk/axptz* \
   bbox.h \
   capture* \
-  curl \
   dbus-* \
   gcrypt.h \
   gmock \
@@ -185,7 +178,6 @@ RUN rm -rf \
   magic.h \
   microhttpd.h \
   nettle \
-  openssl \
   pango-* \
   protobuf-c \
   ptz* \
