@@ -111,7 +111,6 @@ RUN rm -f \
   libservice_registry* \
   libsmartcols* \
   libsqlite* \
-  libssh2* \
   libti* \
   libturbojpeg* \
   libubsan* \
@@ -141,7 +140,6 @@ RUN rm -rf \
   libmicrohttpd.pc \
   libprotobuf-c.pc \
   libscene.pc \
-  libssh2.pc \
   libuser_manager.pc \
   nettle.pc \
   pango* \
@@ -173,7 +171,6 @@ RUN rm -rf \
   gpg-error* \
   gpgrt* \
   gtest \
-  libssh2* \
   libyuv* \
   magic.h \
   microhttpd.h \
