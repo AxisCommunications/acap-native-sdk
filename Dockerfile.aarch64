@@ -82,7 +82,6 @@ RUN rm -f \
   libaxaudio* \
   libaxhttp* \
   libaxptz* \
-  libbbox* \
   libboost_* \
   libcapture* \
   libgcrypt* \
@@ -126,7 +125,6 @@ RUN rm -rf \
   axaudio.pc \
   axhttp.pc \
   axptz.pc \
-  bbox.pc \
   dbus-* \
   gdk-pixbuf-* \
   gmp.pc \
@@ -158,7 +156,6 @@ RUN rm -rf \
   axsdk/axaudio* \
   axsdk/axhttp* \
   axsdk/axptz* \
-  bbox.h \
   capture* \
   dbus-* \
   gcrypt.h \
