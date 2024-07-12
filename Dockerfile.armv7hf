@@ -23,6 +23,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   xz-utils \
   git \
   less \
+  jq \
+  bash-completion \
+  nano \
   vim \
   && \
   apt-get clean && \
