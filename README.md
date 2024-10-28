@@ -14,9 +14,9 @@ hardware.
 
 Please check the following guidelines for ACAP development:
 
-- [ACAP Documentation](https://axiscommunications.github.io/acap-documentation/)
+- [ACAP documentation](https://axiscommunications.github.io/acap-documentation/)
 - [Introduction](https://axiscommunications.github.io/acap-documentation/docs/introduction.html)
-- [Getting Started](https://axiscommunications.github.io/acap-documentation/docs/get-started.html)
+- [Get started](https://axiscommunications.github.io/acap-documentation/docs/get-started.html)
 
 # Examples
 
