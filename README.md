@@ -12,9 +12,9 @@ style, event generating applications that fit well into a VMS centric system.
 This SDK offers high performance by integrating closely with AXIS OS and
 hardware.
 
-Please check the following guidelines for ACAP 4:
+Please check the following guidelines for ACAP development:
 
-- [AXIS ACAP 4 SDK Documentation](https://axiscommunications.github.io/acap-documentation/)
+- [ACAP Documentation](https://axiscommunications.github.io/acap-documentation/)
 - [Introduction](https://axiscommunications.github.io/acap-documentation/docs/introduction.html)
 - [Getting Started](https://axiscommunications.github.io/acap-documentation/docs/get-started.html)
 
