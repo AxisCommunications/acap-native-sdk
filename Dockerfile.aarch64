@@ -166,6 +166,7 @@ RUN rm -rf \
   axsdk/axptz* \
   capture* \
   dbus-* \
+  event* \
   gcrypt.h \
   gmock \
   gmp-32.h \
