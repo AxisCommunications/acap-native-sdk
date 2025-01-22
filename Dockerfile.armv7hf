@@ -134,6 +134,7 @@ RUN rm -rf \
   axhttp.pc \
   axptz.pc \
   dbus-* \
+  event2.pc \
   gdk-pixbuf-* \
   gmp.pc \
   gmpxx.pc \
