@@ -91,7 +91,7 @@ RUN rm -f \
   libaxptz* \
   libboost_* \
   libcapture* \
-  libevent.so \
+  libevent.so* \
   libgcrypt* \
   libgmp* \
   libgnutls* \
