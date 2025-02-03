@@ -90,6 +90,7 @@ RUN rm -f \
   libaxhttp* \
   libaxptz* \
   libboost_* \
+  libevent.so* \
   libcapture* \
   libgcrypt* \
   libgmp* \
