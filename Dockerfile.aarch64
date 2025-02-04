@@ -91,6 +91,7 @@ RUN rm -f \
   libaxptz* \
   libboost_* \
   libcapture* \
+  libevent.so* \
   libgcrypt* \
   libgmp* \
   libgnutls* \
@@ -165,6 +166,7 @@ RUN rm -rf \
   axsdk/axptz* \
   capture* \
   dbus-* \
+  event.h \
   gcrypt.h \
   gmock \
   gmp-32.h \

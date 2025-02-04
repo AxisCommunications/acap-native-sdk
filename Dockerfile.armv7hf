@@ -90,6 +90,7 @@ RUN rm -f \
   libaxhttp* \
   libaxptz* \
   libboost_* \
+  libevent.so* \
   libcapture* \
   libgcrypt* \
   libgmp* \
@@ -165,6 +166,7 @@ RUN rm -rf \
   axsdk/axptz* \
   capture* \
   dbus-* \
+  event.h \
   gcrypt.h \
   gmock \
   gmp-32.h \
