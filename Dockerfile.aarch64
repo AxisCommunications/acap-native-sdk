@@ -6,8 +6,8 @@ ARG TOOLCHAINS_UBUNTU_VERSION=22.04
 ARG SDK_UBUNTU_VERSION=22.04
 ARG REPO=axisecp
 
-FROM ${REPO}/acap-api:${API_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as api
-FROM ${REPO}/acap-toolchain:${TOOLCHAIN_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} as toolchain
+FROM ${REPO}/acap-api:${API_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} AS api
+FROM ${REPO}/acap-toolchain:${TOOLCHAIN_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} AS toolchain
 FROM ubuntu:${SDK_UBUNTU_VERSION}
 
 # Install packages needed for interactive users and some additional libraries
