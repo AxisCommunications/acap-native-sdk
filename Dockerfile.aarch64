@@ -88,7 +88,6 @@ RUN rm -f \
   libax_daemon* \
   libaxaudio* \
   libaxhttp* \
-  libaxptz* \
   libboost_* \
   libcapture* \
   libevent.so* \
@@ -110,8 +109,6 @@ RUN rm -f \
   libparam* \
   libprotobuf* \
   libprotoc* \
-  libptzaurus* \
-  libptzmath* \
   libpython* \
   libscene* \
   libsdbusplus* \
@@ -132,7 +129,6 @@ RUN rm -rf \
   apr* \
   axaudio.pc \
   axhttp.pc \
-  axptz.pc \
   dbus-* \
   gdk-pixbuf-* \
   gmp.pc \
@@ -163,7 +159,6 @@ RUN rm -rf \
   axis \
   axsdk/axaudio* \
   axsdk/axhttp* \
-  axsdk/axptz* \
   capture* \
   dbus-* \
   event.h \
@@ -183,7 +178,6 @@ RUN rm -rf \
   nettle \
   pango-* \
   protobuf-c \
-  ptz* \
   python3* \
   sdbusplus \
   service_registry.h \
