@@ -109,8 +109,6 @@ RUN rm -f \
   libparam* \
   libprotobuf* \
   libprotoc* \
-  libptzaurus* \
-  libptzmath* \  
   libpython* \
   libscene* \
   libsdbusplus* \
