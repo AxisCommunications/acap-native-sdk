@@ -88,8 +88,6 @@ RUN rm -f \
   libapac* \
   libapr* \
   libax_daemon* \
-  libaxaudio* \
-  libaxhttp* \
   libboost_* \
   libcapture* \
   libevent.so* \
@@ -129,8 +127,6 @@ RUN rm -f \
 WORKDIR /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/pkgconfig
 RUN rm -rf \
   apr* \
-  axaudio.pc \
-  axhttp.pc \
   dbus-* \
   gdk-pixbuf-* \
   gmp.pc \
@@ -159,8 +155,6 @@ RUN rm -rf \
   apr* \
   ax_daemon.h \
   axis \
-  axsdk/axaudio* \
-  axsdk/axhttp* \
   capture* \
   dbus-* \
   event.h \
