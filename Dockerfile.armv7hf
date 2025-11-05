@@ -105,7 +105,6 @@ RUN rm -f \
   libmount* \
   libnet_http* \
   libnettle* \
-  libnlohmann* \
   libpango* \
   libparam* \
   libprotobuf* \
@@ -172,7 +171,6 @@ RUN rm -rf \
   libyuv* \
   magic.h \
   microhttpd.h \
-  nlohmann \
   nettle \
   pango-* \
   protobuf-c \
