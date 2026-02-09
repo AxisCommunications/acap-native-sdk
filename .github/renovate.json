@@ -1,22 +1,40 @@
 {
-  "schedule": ["after 10pm and before 5am every weekday", "every weekend"],
-  "extends": ["config:base", ":prHourlyLimitNone"],
-  "labels": ["dependencies"],
+  "schedule": [
+    "after 10pm every weekday",
+    "every weekend",
+    "before 5am every weekday"
+  ],
+  "extends": [
+    "config:recommended",
+    ":prHourlyLimitNone"
+  ],
+  "labels": [
+    "dependencies"
+  ],
   "packageRules": [
     {
-      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true
     },
     {
-      "matchManagers": ["dockerfile"],
+      "matchManagers": [
+        "dockerfile"
+      ],
       "enabled": false
     }
   ],
   "rebaseWhen": "behind-base-branch",
   "vulnerabilityAlerts": {
-    "labels": ["security"]
+    "labels": [
+      "security"
+    ]
   },
-  "stabilityDays": 7,
+  "minimumReleaseAge": "7 days",
   "prCreation": "not-pending",
   "dependencyDashboard": true
 }
