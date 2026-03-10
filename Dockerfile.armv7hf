@@ -37,6 +37,17 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 # Add axis-acap-manifest-tools to PATH
 RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tools/manifest-generator:#g' /opt/axis/acapsdk/environment-setup*
 
+#Remove manifests not supported for 11-LTS
+ARG MANIFEST_DIR=/opt/axis/acapsdk/axis-acap-manifest-tools/schema/schemas/v1
+RUN for f in "${MANIFEST_DIR}"/application-manifest-schema-v*.json; do \
+      v=$(basename "$f" | grep -oP 'v\K[0-9]+\.[0-9]+'); \
+      major=${v%%.*}; \
+      minor=${v#*.}; \
+      if [ "$major" -gt 1 ] || { [ "$major" -eq 1 ] && [ "$minor" -gt 7 ]; }; then \
+        rm -v "$f"; \
+      fi; \
+    done
+
 # Update paths and add explicit sdk path to linker in environment-setup script
 # Add the --disable-new-dtags parameter to the default LDFLAGS to solve dynamic library rpath issues
 RUN sed -i 's:/opt/axis/sdk:/opt/axis/acapsdk:g' /opt/axis/acapsdk/environment-setup* && \
