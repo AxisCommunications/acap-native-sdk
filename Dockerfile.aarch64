@@ -5,10 +5,15 @@ ARG TOOLCHAIN_VERSION=latest
 ARG TOOLCHAINS_UBUNTU_VERSION=24.04
 ARG SDK_UBUNTU_VERSION=24.04
 ARG REPO=axisecp
+ARG AXIS_OS_VERSION_TAG=unknown
 
 FROM ${REPO}/acap-api:${API_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} AS api
 FROM ${REPO}/acap-toolchain:${TOOLCHAIN_VERSION}-${ARCH}-ubuntu${TOOLCHAINS_UBUNTU_VERSION} AS toolchain
 FROM ubuntu:${SDK_UBUNTU_VERSION}
+
+# Set Axis OS version as environment variable (re-declare ARG after FROM)
+ARG AXIS_OS_VERSION_TAG
+ENV AXIS_OS_VERSION=${AXIS_OS_VERSION_TAG}
 
 # Install packages needed for interactive users and some additional libraries
 # - curl, iputils-ping: required by eap-install.sh
