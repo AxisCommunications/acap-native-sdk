@@ -108,6 +108,7 @@ RUN rm -f \
   libmount* \
   libnet_http* \
   libnettle* \
+  libpaho* \
   libpango* \
   libparam* \
   libprotobuf* \
