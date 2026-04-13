@@ -60,6 +60,7 @@ ARG ARCH=aarch64
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/lib/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/include/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/include/
 COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/share/protobuf/ /opt/axis/acapsdk/sysroots/${ARCH}/usr/share/protobuf/
+COPY --from=api /opt/axis/sdk/temp/sysroots/${ARCH}/usr/share/pkgconfig/nlohmann_json.pc /opt/axis/acapsdk/sysroots/${ARCH}/usr/lib/pkgconfig
 
 # Add a missing file for OpenGL
 ARG KHR_DIR=/opt/axis/acapsdk/sysroots/${ARCH}/usr/include/KHR
