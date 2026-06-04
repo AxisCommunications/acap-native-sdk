@@ -44,14 +44,19 @@ RUN apt-get install -y /opt/axis/tools/axis-acap-manifest-tools*.deb && \
 # Add axis-acap-manifest-tools to PATH
 RUN sed -i 's#export PATH=#export PATH=/opt/axis/acapsdk/axis-acap-manifest-tools/manifest-generator:#g' /opt/axis/acapsdk/environment-setup*
 
-#Remove manifests not supported for 11-LTS
-ARG MANIFEST_DIR=/opt/axis/acapsdk/axis-acap-manifest-tools/schema/schemas/v1
-RUN for f in "${MANIFEST_DIR}"/application-manifest-schema-v*.json; do \
-      v=$(basename "$f" | grep -oP 'v\K[0-9]+\.[0-9]+'); \
-      major=${v%%.*}; \
-      minor=${v#*.}; \
+# Remove schemas and corresponding docs and examples not supported for 11-LTS
+ARG SCHEMA_DIR=/opt/axis/acapsdk/axis-acap-manifest-tools/schema
+ARG SCHEMAS_DIR=$SCHEMA_DIR/schemas/v1
+ARG SCHEMA_DOCS_DIR=$SCHEMA_DIR/doc/v1
+ARG SCHEMA_EXAMPLE_DIR=$SCHEMA_DIR/examples/v1
+RUN for schema_file in "${SCHEMAS_DIR}"/application-manifest-schema-v*.json; do \
+      version=$(basename "$schema_file" | grep -oP 'v\K[0-9]+\.[0-9]+(\.[0-9]+)?'); \
+      major=$(echo "$version" | cut -d. -f1); \
+      minor=$(echo "$version" | cut -d. -f2); \
       if [ "$major" -gt 1 ] || { [ "$major" -eq 1 ] && [ "$minor" -gt 7 ]; }; then \
-        rm -v "$f"; \
+        doc_file="${SCHEMA_DOCS_DIR}/schema-field-descriptions-v${version}.md"; \
+        example_file="${SCHEMA_EXAMPLE_DIR}/test-manifest-v${version}.json"; \
+        rm -v "$schema_file" "$doc_file" "$example_file"; \
       fi; \
     done
 
