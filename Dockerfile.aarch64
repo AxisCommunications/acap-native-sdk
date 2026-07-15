@@ -20,6 +20,7 @@ ENV AXIS_OS_VERSION=${AXIS_OS_VERSION_TAG}
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   crossbuild-essential-arm64 \
   make \
+  binutils \
   pkg-config \
   python3-pip \
   python3-jsonschema \
