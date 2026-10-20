@@ -90,7 +90,6 @@ RUN rm -f \
   libapac* \
   libapr* \
   libax_daemon* \
-  libboost_* \
   libcapture* \
   libevent.so* \
   libgcrypt* \
