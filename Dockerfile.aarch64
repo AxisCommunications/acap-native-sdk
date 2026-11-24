@@ -181,8 +181,11 @@ RUN rm -rf \
   gtest \
   libyuv* \
   magic.h \
+  mdb \
+  mdb_cpp \
   microhttpd.h \
   nettle \
+  nexus \
   pango-* \
   protobuf-c \
   python3* \
